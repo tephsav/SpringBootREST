@@ -23,34 +23,34 @@ public class RestAdminCotroller {
         this.roleService = roleService;
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/users")
     public ResponseEntity<List<User>> showAllUsers() {
         return new ResponseEntity<>(userService.showAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/admin/roles")
+    @GetMapping("/users/roles")
     public ResponseEntity<List<Role>> getAllRoles() {
         return new ResponseEntity<>(new ArrayList<>(roleService.getAllRoles()), HttpStatus.OK);
     }
 
-    @GetMapping("/admin/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<User> showUser(@PathVariable("id") Integer id) {
         return new ResponseEntity<>(userService.showUser(id), HttpStatus.OK);
     }
 
-    @PostMapping("/admin")
+    @PostMapping("/users")
     public ResponseEntity<User> create(@RequestBody User user) {
         userService.createUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<User> delete(@PathVariable Integer id) {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/admin")
+    @PutMapping("/users")
     public ResponseEntity<User> update(@RequestBody User user) {
         userService.updateUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);

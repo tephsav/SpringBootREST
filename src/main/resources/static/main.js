@@ -21,9 +21,10 @@ function createTable(user) {
 }
 
 let roleSet = []
+let apiUsersPath = 'api/users/'
 
 function getAllUsers() {
-    $.getJSON("api/admin", function (data) {
+    $.getJSON(apiUsersPath, function (data) {
         let rows = '';
         $.each(data, function (key, user) {
             rows += createTable(user);
@@ -31,7 +32,7 @@ function getAllUsers() {
         $('#listUsers').append(rows);
 
         $.ajax({
-            url: '/api/admin/roles',
+            url: apiUsersPath + 'roles',
             method: 'GET',
             dataType: 'json',
             success: function (roles) {
@@ -54,7 +55,7 @@ $("#addUser").on('click', () => {
         }
     }
     $.ajax({
-        url: 'api/admin',
+        url: apiUsersPath,
         method: 'POST',
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
@@ -77,7 +78,7 @@ $("#addUser").on('click', () => {
 });
 
 function editUser(id) {
-    fetch("/api/admin/" + id, {method: "GET", dataType: 'json'})
+    fetch(apiUsersPath + id, {method: "GET", dataType: 'json'})
         .then((response) => {
             response.json().then((user) => {
                 $('#editId').val(user.id);
@@ -110,7 +111,7 @@ $('#update').on('click', (event) => {
         roles.push(role);
     });
     $.ajax({
-        url: '/api/admin',
+        url: apiUsersPath,
         method: 'PUT',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -131,7 +132,7 @@ $('#update').on('click', (event) => {
 });
 
 $(document).on('click', '.del-btn', function () {
-    fetch("/api/admin/" + $(this).attr('data-id'), {method: "GET", dataType: 'json'})
+    fetch(apiUsersPath + $(this).attr('data-id'), {method: "GET", dataType: 'json'})
         .then((response) => {
             response.json().then((user) => {
                 $('#delId').val(user.id);
@@ -153,7 +154,7 @@ $(document).on('click', '.del-btn', function () {
 $('#delete').on('click', (event) => {
     event.preventDefault()
     $.ajax({
-        url: '/api/admin/' + $('#delId').val(),
+        url: apiUsersPath + $('#delId').val(),
         method: 'DELETE',
         success: function () {
             $('#' + $('#delId').val()).remove();
