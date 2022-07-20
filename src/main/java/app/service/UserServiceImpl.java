@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -16,15 +18,26 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleService roleService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     @Override
     public List<User> showAllUsers() {
         return (List<User>) userRepository.findAll();
+    }
+
+    @Override
+    public List<User> showUsersWithUserRole() {
+        List<User> onlyUsers = showAllUsers().stream()
+                .filter(user -> !(user.getRole().contains(roleService.getRoleByName("ROLE_ADMIN"))))
+                .collect(Collectors.toList());
+
+        return onlyUsers;
     }
 
     @Override
@@ -62,6 +75,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByName(String name) {
         return userRepository.findByName(name);
+    }
+
+    @Override
+    public User findUserById(Integer id) {
+        User user = null;
+        Optional<User> optional = userRepository.findById(id);
+        if(optional.isPresent()) {
+            user = optional.get();
+        }
+        return user;
     }
 
     @Override

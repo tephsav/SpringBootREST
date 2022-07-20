@@ -7,6 +7,8 @@ import java.util.List;
 public interface UserService {
     List<User> showAllUsers();
 
+    List<User> showUsersWithUserRole();
+
     User showUser(Integer id);
 
     void createUser(User user);
@@ -16,6 +18,8 @@ public interface UserService {
     void deleteUser(Integer id);
 
     User findUserByName(String name);
+
+    User findUserById(Integer id);
 
     String getCurrentUsername();
 

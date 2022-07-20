@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
-public class RestAdminCotroller {
+public class UserRestCotroller {
 
     private final UserService userService;
     private final RoleService roleService;
 
-    public RestAdminCotroller(UserService userService, RoleService roleService) {
+    public UserRestCotroller(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -31,6 +32,27 @@ public class RestAdminCotroller {
     @GetMapping("/users/roles")
     public ResponseEntity<List<Role>> getAllRoles() {
         return new ResponseEntity<>(new ArrayList<>(roleService.getAllRoles()), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/only_users")
+    public ResponseEntity<List<User>> showUsersWithUserRole() {
+        return new ResponseEntity<>(userService.showUsersWithUserRole(), HttpStatus.OK);
+    }
+
+    @PostMapping("/users/accept/{id}")
+    public ResponseEntity<?> acceptAdminRequest(@PathVariable("id") Integer id) {
+        User user = userService.findUserById(id);
+        Set<Role> roles = user.getRole();
+        roles.add(roleService.getRoleByName("ROLE_ADMIN"));
+        user.setRole(roles);
+        userService.updateUser(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/users/decline/{id}")
+    public ResponseEntity<?> declineAdminRequest(@PathVariable("id") Integer id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/users/{id}")

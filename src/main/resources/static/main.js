@@ -20,6 +20,28 @@ function createTable(user) {
     return userList;
 }
 
+function createRequestsTable(user) {
+    let userRequestsList = '<tr id=' + user.id + '>';
+    userRequestsList += '<td>' + user.id + '</td>';
+    userRequestsList += '<td>' + user.name + '</td>';
+    userRequestsList += '<td>' + user.lastName + '</td>';
+    userRequestsList += '<td>' + user.email + '</td>';
+    userRequestsList += '<td>';
+    let roles = user.roles;
+    for (let r of roles) {
+        userRequestsList += r.role.replace('ROLE_','') + ' ';
+    }
+    userRequestsList += '</td>' +
+        '<td>' + '<input id="btnAccept" value="Accept" type="button" ' +
+        'class="btn-success btn accept-btn" data-toggle="modal" data-target="#acceptModal" ' +
+        'data-id="' + user.id + '">' + '</td>' +
+        '<td>' + '<input id="btnDecline" value="Decline" type="button" ' +
+        'class="btn btn-danger decline-btn" data-toggle="modal" data-target="#declineModal" ' +
+        'data-id=" ' + user.id + ' ">' + '</td>';
+    userRequestsList += '</tr>';
+    return userRequestsList;
+}
+
 let roleSet = []
 let apiUsersPath = 'api/users/'
 
@@ -42,7 +64,27 @@ function getAllUsers() {
     });
 }
 
+function getAllRequests() {
+    $.getJSON(apiUsersPath + 'only_users', function (data) {
+        let rows = '';
+        $.each(data, function (key, user) {
+            rows += createRequestsTable(user);
+        });
+        $('#listRequests').append(rows);
+
+        $.ajax({
+            url: apiUsersPath + 'roles',
+            method: 'GET',
+            dataType: 'json',
+            success: function (roles) {
+                roleSet = roles;
+            }
+        });
+    });
+}
+
 getAllUsers()
+getAllRequests()
 
 $("#addUser").on('click', () => {
     let roles = []
@@ -160,4 +202,42 @@ $('#delete').on('click', (event) => {
             $('#' + $('#delId').val()).remove();
         }
     });
+});
+
+$('#btnDecline').on('click', (event) => {
+    event.preventDefault()
+    $.ajax({
+        url: apiUsersPath + "decline/" + $(this).parent("listRequests").index();
+        method: 'DELETE',
+        success: function () {
+            $("#listRequests").on("click", function() {
+               $(this).closest("tr").remove();
+            });
+        }
+    });
+});
+
+$("#btnAccept").on('click', (event) => {
+    event.preventDefault()
+    $.ajax({
+        url: apiUsersPath + "accept/" + $(this).parent("listRequests").index();
+        method: 'POST',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({
+            name: $('#name').val(),
+            lastName: $('#lastName').val(),
+            age: $('#age').val(),
+            email: $('#email').val(),
+            password: $('#password').val(),
+            roles: roles
+        }),
+
+        success: function () {
+            $('#listRequests').empty();
+            getAllRequests();
+            $('#nav-request-tab').tab('show');
+        }
+    });
+    document.forms.reset();
 });
