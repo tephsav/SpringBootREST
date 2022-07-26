@@ -7,8 +7,6 @@ import java.util.List;
 public interface UserService {
     List<User> showAllUsers();
 
-    List<User> showUsersWithUserRole();
-
     User showUser(Integer id);
 
     void createUser(User user);

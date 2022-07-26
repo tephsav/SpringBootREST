@@ -40,6 +40,17 @@ public class User implements UserDetails {
     @JsonProperty("roles")
     private Set<Role> roles;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Request requests;
+
+    public Request getRequests() {
+        return requests;
+    }
+
+    public void setRequests(Request requests) {
+        this.requests = requests;
+    }
+
     public User() {
     }
 

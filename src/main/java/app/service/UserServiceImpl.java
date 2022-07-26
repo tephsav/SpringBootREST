@@ -32,15 +32,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> showUsersWithUserRole() {
-        List<User> onlyUsers = showAllUsers().stream()
-                .filter(user -> !(user.getRole().contains(roleService.getRoleByName("ROLE_ADMIN"))))
-                .collect(Collectors.toList());
-
-        return onlyUsers;
-    }
-
-    @Override
     public User showUser(Integer id) {
         User user = userRepository.findById(id).get();
         return user;

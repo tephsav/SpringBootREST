@@ -44,6 +44,7 @@ function createRequestsTable(user) {
 
 let roleSet = []
 let apiUsersPath = 'api/users/'
+let apiRequestsPath = 'api/requests/'
 
 function getAllUsers() {
     $.getJSON(apiUsersPath, function (data) {
@@ -65,7 +66,7 @@ function getAllUsers() {
 }
 
 function getAllRequests() {
-    $.getJSON(apiUsersPath + 'only_users', function (data) {
+    $.getJSON(apiRequestsPath, function (data) {
         let rows = '';
         $.each(data, function (key, user) {
             rows += createRequestsTable(user);
@@ -207,7 +208,7 @@ $('#delete').on('click', (event) => {
 $('#btnDecline').on('click', (event) => {
     event.preventDefault()
     $.ajax({
-        url: apiUsersPath + "decline/" + $(this).parent("listRequests").index();
+        url: apiRequestsPath + "decline/" + $(this).parent("listRequests").index();
         method: 'DELETE',
         success: function () {
             $("#listRequests").on("click", function() {
@@ -220,7 +221,7 @@ $('#btnDecline').on('click', (event) => {
 $("#btnAccept").on('click', (event) => {
     event.preventDefault()
     $.ajax({
-        url: apiUsersPath + "accept/" + $(this).parent("listRequests").index();
+        url: apiRequestsPath + "accept/" + $(this).parent("listRequests").index();
         method: 'POST',
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
