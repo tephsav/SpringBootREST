@@ -2,6 +2,7 @@
 The application allows you to register, delete and change the user. As a user, you can view your own page, and as an administrator you can also view, edit, and delete other people's pages.
 
 Technology Stack:
+
     Spring Boot (Data, Security, Mail, Thymeleaf, MVC, REST)
     DBMS (MySQL)
     Frontend (HTML, Bootstrap, JavaScript, jQuery, Ajax)
