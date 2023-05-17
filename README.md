@@ -4,7 +4,9 @@ The application allows you to register, delete and change the user. As a user, y
 Technology Stack:
 
     Spring Boot (Data, Security, Mail, Thymeleaf, MVC, REST)
+
     DBMS (MySQL)
+
     Frontend (HTML, Bootstrap, JavaScript, jQuery, Ajax)
     
 Main window
